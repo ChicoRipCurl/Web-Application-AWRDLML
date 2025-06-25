@@ -54,3 +54,5 @@ function run(): void {
 }
 
 run();
+
+export default app();
