@@ -1,0 +1,213 @@
+<div class="prediction-container" [ngClass]="{'is-empty': !isLoading && !hasSufficientData}">
+
+    <h1 class="page-title">Predicción de Demanda</h1>
+
+    <div *ngIf="isLoading" class="loader-container">
+        <div class="spinner"></div>
+        <p>Analizando datos históricos...</p>
+    </div>
+
+    <!-- Mensaje de datos insuficientes -->
+    <div *ngIf="!isLoading && !hasSufficientData" class="data-needed-container">
+        <div class="data-needed-card">
+            <div class="card-icon icon-chart"></div>
+            <h4 class="card-title">¡Casi listo para predecir!</h4>
+            <p class="card-text">
+                Necesitamos al menos <strong>2 meses</strong> de datos de ventas y compras para activar el motor de predicción.
+            </p>
+            <p class="card-text-secondary">
+                Sigue registrando tus operaciones diarias para desbloquear esta poderosa herramienta.
+            </p>
+            <div class="card-action">
+                <a routerLink="/registros" class="card-button icon-register">
+                    Registrar Ventas/Compras
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal cuando hay datos -->
+    <div *ngIf="!isLoading && hasSufficientData" class="main-content">
+
+        <!-- Gráfico 1:  Desempeño histórico de insumo  -->
+        <div class="custom-card mb-5">
+            <div class="custom-card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Desempeño histórico de insumos</h5>
+                    <!-- FORMULARIO PARA FILTRAR EL GRÁFICO 1 -->
+                    <form [formGroup]="performanceFilterForm" class="d-flex align-items-center gap-3">
+                        <select formControlName="startMonth" class="form-select form-select-sm">
+                            <option [ngValue]="null" disabled>Mes Inicio</option>
+                            <option *ngFor="let month of performanceStartMonths" [ngValue]="month.value">{{ month.name }}</option>
+                        </select>
+                        <select formControlName="endMonth" class="form-select form-select-sm">
+                            <option [ngValue]="null" disabled>Mes Fin</option>
+                            <option *ngFor="let month of performanceEndMonths" [ngValue]="month.value">{{ month.name }}</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+            <div class="custom-card-body">
+                <!-- Contenedor del gráfico con scroll -->
+                <div class="chart-wrapper">
+                    <div class="chart-inner-wrapper" [style.width.px]="getChartWidth()">
+                        <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+                    </div>
+                </div>
+                <hr>
+                <!-- SECCIÓN DE COMPARATIVA DE MES ÚNICO -->
+                <div class="summary-container">
+                    <div class="month-comparison">
+                        <label for="comparisonMonth">Comparativa del mes:</label>
+                        <select id="comparisonMonth" [formControl]="comparisonMonthControl" class="form-select form-select-sm">
+                            <option *ngFor="let month of historicalData.meses" [ngValue]="month.key">{{ month.mes }}</option>
+                        </select>
+                    </div>
+                    <div class="summary">
+                        <div>Compras del mes: <strong>S/. {{ selectedMonthData.compras | number:'1.2-2' }}</strong></div>
+                        <div>Consumo del mes: <strong>S/. {{ selectedMonthData.consumo | number:'1.2-2' }}</strong></div>
+                    </div>
+                </div>
+                <hr>
+                <div class="summary-total">
+                    <div>Promedio histórico mensual (Compras): <strong>S/. {{ historicalData.promedioCompras | number:'1.2-2' }}</strong></div>
+                    <div>Promedio histórico mensual (Consumo): <strong>S/. {{ historicalData.promedioConsumo | number:'1.2-2' }}</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: ANÁLISIS DE DESPERDICIO -->
+        <div *ngIf="wasteAnalysisData && wasteAnalysisData.meses.length > 0" class="custom-card mb-5">
+            <div class="custom-card-header">
+                <h5>Análisis de Desperdicio Alimentario (Kg y %)</h5>
+                <!-- FORMULARIO PARA FILTRAR EL GRÁFICO 2 -->
+                <form [formGroup]="wasteFilterForm" class="d-flex align-items-center gap-3">
+                    <select formControlName="startMonth" class="form-select form-select-sm">
+                        <option [ngValue]="null" disabled>Mes Inicio</option>
+                        <option *ngFor="let month of wasteStartMonths" [ngValue]="month.value">{{ month.name }}</option>
+                    </select>
+                    <select formControlName="endMonth" class="form-select form-select-sm">
+                        <option [ngValue]="null" disabled>Mes Fin</option>
+                        <option *ngFor="let month of wasteEndMonths" [ngValue]="month.value">{{ month.name }}</option>
+                    </select>
+                </form>
+            </div>
+            <div class="custom-card-body">
+                <div class="row mb-4">
+                    <!-- KPIs de impacto -->
+                    <div class="col-md-4 text-center">
+                        <div class="kpi-card">
+                            <h6>Reducción de Desperdicio</h6>
+                            <p class="kpi-value text-success">{{ wasteAnalysisData.porcentajeReduccionTotal | number:'1.1-1' }}%</p>
+                            <small class="text-muted">Comparando desde el primer y último mes</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="kpi-card">
+                            <h6>Costo del Desperdicio</h6>
+                            <p class="kpi-value text-success">S/. {{ wasteAnalysisData.totalDesperdicioSoles | number:'1.2-2' }}</p>
+                            <small class="text-muted">Dinero perdido en el periodo</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="kpi-card">
+                            <h6>Desperdicio Total en Kg</h6>
+                            <p class="kpi-value text-success">{{ wasteAnalysisData.totalDesperdicioKg | number:'1.1-1' }} Kg</p>
+                            <small class="text-muted">Acumulado en el periodo</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico combinado -->
+                <div class="chart-wrapper">
+                    <canvas #wasteChart baseChart [data]="wasteChartData" [options]="wasteChartOptions" [type]="'bar'"></canvas>
+                </div>
+                <hr>
+                <!-- Comparativa de mes -->
+                <div class="summary-container">
+                    <div class="month-comparison">
+                        <label for="wasteComparison">Detalle del mes:</label>
+                        <select id="wasteComparison" [formControl]="wasteComparisonControl" class="form-select form-select-sm">
+                            <option *ngFor="let month of wasteAnalysisData.meses" [ngValue]="month.key">{{ month.mes }}</option>
+                        </select>
+                    </div>
+                    <div class="summary">
+                        <div>Desperdicio del mes (Kg): <strong>{{ selectedWasteMonthData.desperdicioKg | number:'1.2-2' }} Kg</strong></div>
+                        <div>Desperdicio del mes (S/): <strong>S/. {{ selectedWasteMonthData.desperdicioSoles | number:'1.2-2' }}</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Formulario de Predicción -->
+        <div class="custom-card mb-4">
+            <div class="custom-card-body">
+                <h5 class="form-title">Selecciona un rango de fechas para la predicción</h5>
+                <form [formGroup]="predictionForm" (ngSubmit)="onGeneratePrediction()" class="prediction-form">
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha inicio</label>
+                        <input type="date" id="fechaInicio" formControlName="fechaInicio" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha fin</label>
+                        <input type="date" id="fechaFin" formControlName="fechaFin" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="submit-btn" [disabled]="predictionForm.invalid || isPredicting">
+                            <span *ngIf="isPredicting" class="spinner-sm"></span>
+                            {{ isPredicting ? 'Generando...' : 'Generar predicción' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Resultados de la Predicción -->
+        <div *ngIf="predictionResult">
+            <h3 class="results-title">Resultados de predicción</h3>
+            <div class="results-grid">
+                <div class="custom-card">
+                    <div class="custom-card-header">
+                        <h5>Platos estimados para el periodo seccionado</h5>
+                    </div>
+                    <table class="results-table">
+                        <thead>
+                        <tr>
+                            <th>Platos</th>
+                            <th class="text-end">Estimación de ventas</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let plato of predictionResult.platosEstimados">
+                            <td>{{ plato.nombre }}</td>
+                            <td class="text-end">{{ plato.cantidadEstimada }} unidades</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="custom-card">
+                    <div class="custom-card-header">
+                        <h5>Insumo requeridos</h5>
+                    </div>
+                    <table class="results-table">
+                        <thead>
+                        <tr>
+                            <th>Insumos</th>
+                            <th class="text-end">Predicción óptima</th>
+                            <th class="text-end">Compras sin el uso del sistema</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let insumo of predictionResult.insumosRequeridos">
+                            <td>{{ insumo.nombre }}</td>
+                            <td class="text-end"><strong>{{ insumo.prediccionOptimaKg }} kg</strong></td>
+                            <td class="text-end text-muted">{{ insumo.compraSinSistemaKg }} kg</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

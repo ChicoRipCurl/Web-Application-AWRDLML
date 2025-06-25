@@ -1,0 +1,237 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "restaurantName": "Restaurante Don José",
+      "email": "admin@restaurant.com",
+      "password": "admin123",
+      "createdAt": "2025-06-01T00:00:00Z"
+    },
+    {
+      "id": "a7e6",
+      "restaurantName": "RestauranteTest",
+      "email": "RestauranteTest@gmail.com",
+      "password": "Restaurante1",
+      "createdAt": "2025-06-07T18:06:49.826Z"
+    }
+  ],
+  "platos": [
+    {
+      "id": "1",
+      "usuarioId": "1",
+      "nombre": "Lomo saltado",
+      "insumos": [
+        {
+          "nombre": "Papa amarilla",
+          "cantidadPorPorcion": 0.1,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Lomo",
+          "cantidadPorPorcion": 0.2,
+          "unidad": "g"
+        }
+      ]
+    },
+    {
+      "id": "c810",
+      "usuarioId": "1",
+      "nombre": "Arroz con pollo",
+      "insumos": [
+        {
+          "nombre": "Arroz",
+          "cantidadPorPorcion": 0.12,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Pollo",
+          "cantidadPorPorcion": 0.15,
+          "unidad": "g"
+        }
+      ]
+    },
+    {
+      "id": "d40b",
+      "nombre": "Causa",
+      "usuarioId": "a7e6",
+      "insumos": [
+        {
+          "nombre": "Papas",
+          "cantidadPorPorcion": 0.1,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Pechuga de Pollo",
+          "cantidadPorPorcion": 0.25,
+          "unidad": "unid",
+          "pesoAprox": 1
+        },
+        {
+          "nombre": "Aji",
+          "cantidadPorPorcion": 0.01,
+          "unidad": "unid",
+          "pesoAprox": 0.01
+        }
+      ]
+    },
+    {
+      "id": "bed7",
+      "nombre": "Arroz con pollo",
+      "usuarioId": "a7e6",
+      "insumos": [
+        {
+          "nombre": "Arroz",
+          "cantidadPorPorcion": 0.2,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Zanahoria",
+          "cantidadPorPorcion": 0.04,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Alverja",
+          "cantidadPorPorcion": 0.05,
+          "unidad": "g"
+        },
+        {
+          "nombre": "Pechuga de Pollo",
+          "cantidadPorPorcion": 0.25,
+          "unidad": "unid",
+          "pesoAprox": 1
+        }
+      ]
+    }
+  ],
+  "ventas": [
+    {
+      "id": "b143",
+      "usuarioId": "1",
+      "fecha": "2025-06-05",
+      "platoId": "1",
+      "cantidad": 20
+    },
+    {
+      "id": "93d3",
+      "usuarioId": "1",
+      "fecha": "2025-06-05",
+      "platoId": "c810",
+      "cantidad": 30
+    },
+    {
+      "id": "3d3b",
+      "usuarioId": "1",
+      "fecha": "2025-06-04",
+      "platoId": "1",
+      "cantidad": 1
+    },
+    {
+      "id": "65ffa825-6ab9-4134-83ab-a3a1a1b48cb0",
+      "usuarioId": "a7e6",
+      "fecha": "2025-06-13",
+      "platoId": "d40b",
+      "cantidad": 50
+    },
+    {
+      "id": "1c2a8a27-336b-41a5-8b2c-5130d73877d0",
+      "usuarioId": "a7e6",
+      "fecha": "2025-04-13",
+      "platoId": "d40b",
+      "cantidad": 80
+    },
+    {
+      "id": "dd226ff5-3e9d-425a-8cf6-d65ac9c75b69",
+      "usuarioId": "a7e6",
+      "fecha": "2025-05-13",
+      "platoId": "d40b",
+      "cantidad": 65
+    }
+  ],
+  "compras": [
+    {
+      "id": "c0f9",
+      "usuarioId": "1",
+      "fecha": "2025-06-06",
+      "insumos": [
+        {
+          "nombre": "Ají amarillo",
+          "cantidad": 0.2,
+          "unidad": "g",
+          "costoTotal": 5
+        }
+      ]
+    },
+    {
+      "id": "bb11",
+      "usuarioId": "1",
+      "fecha": "2025-06-01",
+      "insumos": [
+        {
+          "nombre": "Papa",
+          "cantidad": 100,
+          "unidad": "kg",
+          "costoTotal": 342
+        }
+      ]
+    },
+    {
+      "id": "44d0",
+      "usuarioId": "1",
+      "fecha": "2025-06-06",
+      "insumos": [
+        {
+          "nombre": "Cebolla",
+          "cantidad": 5,
+          "unidad": "kg",
+          "costoTotal": 100
+        }
+      ]
+    },
+    {
+      "id": "074f1857-41f4-45c8-8047-3e60be3aa65d",
+      "usuarioId": "a7e6",
+      "fecha": "2025-06-10",
+      "insumos": [
+        {
+          "nombre": "Papas",
+          "cantidad": 20,
+          "unidad": "kg",
+          "costoTotal": 60
+        },
+        {
+          "nombre": "Aji",
+          "cantidad": 0.08,
+          "unidad": "unid",
+          "costoTotal": 5,
+          "pesoAprox": 0.01
+        }
+      ]
+    },
+    {
+      "id": "ec1cf84b-d859-4021-a263-6c64f85549ca",
+      "usuarioId": "a7e6",
+      "fecha": "2025-05-13",
+      "insumos": [
+        {
+          "nombre": "Papas",
+          "cantidad": 30,
+          "unidad": "kg",
+          "costoTotal": 80
+        }
+      ]
+    },
+    {
+      "id": "87c6241d-0255-443e-849c-76920d2e158f",
+      "usuarioId": "a7e6",
+      "fecha": "2025-04-13",
+      "insumos": [
+        {
+          "nombre": "Papas",
+          "cantidad": 50,
+          "unidad": "kg",
+          "costoTotal": 100
+        }
+      ]
+    }
+  ]
+}

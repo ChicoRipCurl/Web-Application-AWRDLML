@@ -1,0 +1,200 @@
+<div class="platos-container">
+
+    <!-- Mensaje de notificación -->
+    <div *ngIf="mostrarMensaje" class="mensaje" [ngClass]="{'success': tipoMensaje === 'success', 'error': tipoMensaje === 'error'}">
+        {{ mensaje }}
+    </div>
+
+    <!-- Vista principal - Lista de platos -->
+    <div *ngIf="!mostrarFormulario" class="main-content">
+        <div class="content-header">
+            <h1>Platos Registrados</h1>
+            <button class="btn btn-primary add-btn" (click)="mostrarFormularioAnadir()">
+                <span class="plus-icon">+</span> Añadir nuevo plato
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table class="platos-table" *ngIf="platos.length > 0; else noPlatos">
+                <thead>
+                <tr>
+                    <th>Nombre del Plato</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let plato of platos">
+                    <td>{{ plato.nombre }}</td>
+                    <td class="acciones-cell">
+                        <button class="btn btn-secondary" (click)="editarPlato(plato)">
+                            Editar
+                        </button>
+                        <button class="btn btn-danger" (click)="eliminarPlato(plato.id)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ng-template #noPlatos>
+                <div class="no-platos">
+                    <p>Aún no se ha registrado ningún plato.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Formulario para Añadir/Editar Plato -->
+    <div *ngIf="mostrarFormulario" class="form-container">
+        <div class="form-card">
+            <h2>{{ modoEdicion ? 'Editar Plato' : 'Añadir Nuevo Plato' }}</h2>
+
+            <form [formGroup]="platoForm" (ngSubmit)="guardar()">
+                <div class="form-section">
+                    <h3>Información del plato</h3>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre del plato *</label>
+                        <input
+                                type="text"
+                                id="nombre"
+                                formControlName="nombre"
+                                placeholder="Ej. Lomo Saltado"
+                                class="form-input"
+                                [class.error]="platoForm.get('nombre')?.invalid && platoForm.get('nombre')?.touched">
+                        <div *ngIf="platoForm.get('nombre')?.invalid && platoForm.get('nombre')?.touched" class="error-message">
+                            Este campo es obligatorio.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-section">
+                    <h3>Insumos requeridos</h3>
+
+                    <div class="insumos-table-container">
+                        <table class="insumos-table">
+                            <thead>
+                            <tr>
+                                <th>Nombre del Insumo</th>
+                                <th>Cantidad por porción</th>
+                                <th>Cantidad específica</th>
+                                <th>Unidad</th>
+                                <th>Peso aprox. (g)</th>
+                                <th>Acción</th>
+                            </tr>
+                            </thead>
+                            <tbody formArrayName="insumos">
+                            <tr *ngFor="let insumo of insumosFormArray.controls; let i = index" [formGroupName]="i">
+                                <td>
+                                    <input
+                                            type="text"
+                                            formControlName="nombre"
+                                            placeholder="Ej. Papa Amarilla"
+                                            class="form-input table-input"
+                                            [class.error]="insumo.get('nombre')?.invalid && insumo.get('nombre')?.touched">
+                                    <div *ngIf="insumo.get('nombre')?.invalid && insumo.get('nombre')?.touched" class="error-message">
+                                        Este campo es obligatorio.
+                                    </div>
+                                </td>
+                                <td>
+                                    <select
+                                            *ngIf="deberMostrarSelectorCantidad(i)"
+                                            formControlName="cantidadPorPorcion"
+                                            (change)="onCantidadChange(i)"
+                                            class="form-input table-input"
+                                            [class.error]="insumo.get('cantidadPorPorcion')?.invalid && insumo.get('cantidadPorPorcion')?.touched">
+                                        <option value="">Seleccionar</option>
+                                        <option *ngFor="let opcion of opcionesCantidad" [value]="opcion.valor">
+                                            {{ opcion.texto }}
+                                        </option>
+                                    </select>
+                                    <span *ngIf="!deberMostrarSelectorCantidad(i)">-</span>
+                                    <div *ngIf="deberMostrarSelectorCantidad(i) && insumo.get('cantidadPorPorcion')?.invalid && insumo.get('cantidadPorPorcion')?.touched" class="error-message">
+                                        Seleccione una cantidad.
+                                    </div>
+                                </td>
+                                <td>
+                                    <input
+                                            *ngIf="insumo.get('cantidadPorPorcion')?.value === 'manual' || !deberMostrarSelectorCantidad(i)"
+                                            type="number"
+                                            formControlName="cantidadManual"
+                                            placeholder="Ej: 1.25"
+                                            step="0.01"
+                                            min="0.01"
+                                            class="form-input table-input"
+                                            [class.error]="insumo.get('cantidadManual')?.invalid && insumo.get('cantidadManual')?.touched">
+                                    <span *ngIf="insumo.get('cantidadPorPorcion')?.value !== 'manual' && deberMostrarSelectorCantidad(i)">-</span>
+                                    <div *ngIf="(insumo.get('cantidadPorPorcion')?.value === 'manual' || !deberMostrarSelectorCantidad(i)) && insumo.get('cantidadManual')?.invalid && insumo.get('cantidadManual')?.touched" class="error-message">
+                                        Ingrese una cantidad válida.
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <select
+                                            formControlName="unidad"
+                                            (change)="onUnidadChange(i)"
+                                            class="form-input table-input">
+                                        <option *ngFor="let unidad of unidades" [value]="unidad">{{ unidad }}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input
+                                            *ngIf="insumo.get('unidad')?.value === 'unid'"
+                                            type="number"
+                                            formControlName="pesoAprox"
+                                            placeholder="Ej: 60"
+                                            step="0.1"
+                                            min="0.1"
+                                            class="form-input table-input"
+                                            [class.error]="insumo.get('pesoAprox')?.invalid && insumo.get('pesoAprox')?.touched">
+                                    <span *ngIf="insumo.get('unidad')?.value !== 'unid'">-</span>
+                                    <div *ngIf="insumo.get('unidad')?.value === 'unid' && insumo.get('pesoAprox')?.invalid && insumo.get('pesoAprox')?.touched" class="error-message">
+                                        Ingrese el peso aproximado.
+                                    </div>
+                                </td>
+                                <td>
+                                    <button
+                                            type="button"
+                                            class="btn btn-danger btn-small"
+                                            (click)="eliminarInsumo(i)"
+                                            [disabled]="insumosFormArray.length === 1">
+                                        ❌
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary add-insumo-btn"
+                            (click)="agregarInsumo()">
+                        + Añadir insumo
+                    </button>
+
+                    <div *ngIf="insumosFormArray.length === 0" class="error-message">
+                        Debe añadir al menos un insumo.
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            (click)="cancelar()">
+                        Cancelar
+                    </button>
+                    <button
+                            type="submit"
+                            class="btn btn-primary"
+                            [disabled]="!esFormularioValido()">
+                        {{ modoEdicion ? 'Guardar cambios' : 'Guardar' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

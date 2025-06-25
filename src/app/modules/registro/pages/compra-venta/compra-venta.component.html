@@ -1,0 +1,386 @@
+<div class="container">
+    <!-- SECCIÓN SUPERIOR - REGISTRO DE VENTAS -->
+    <div class="seccion-ventas">
+        <div class="encabezado-seccion">
+            <h2>Registro de Ventas</h2>
+            <div class="controles-fecha">
+                <label for="fechaVentas">Seleccionar fecha:</label>
+                <input
+                        type="date"
+                        id="fechaVentas"
+                        [(ngModel)]="fechaSeleccionadaVentas"
+                        (change)="onFechaVentasChange()"
+                        class="input-fecha">
+                <button
+                        type="button"
+                        class="btn-agregar"
+                        (click)="abrirFormularioVenta()"
+                        [disabled]="cargandoVentas">
+                    + Añadir venta
+                </button>
+            </div>
+        </div>
+
+        <!-- Mensaje de estado -->
+        <div *ngIf="mensajeVentas" class="mensaje" [ngClass]="{'mensaje-error': mensajeVentas.includes('Error')}">
+            {{ mensajeVentas }}
+        </div>
+
+        <!-- Tabla de ventas -->
+        <div class="tabla-container" *ngIf="!cargandoVentas && ventasDelDia.length > 0">
+            <table class="tabla-ventas">
+                <thead>
+                <tr>
+                    <th>Plato</th>
+                    <th>Cantidad</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let venta of ventasDelDia">
+                    <td>{{ venta.plato }}</td>
+                    <td>{{ venta.cantidad }}</td>
+                    <td class="acciones">
+                        <button
+                                type="button"
+                                class="btn-editar"
+                                (click)="editarVenta(venta)"
+                                title="Editar">
+                            ✏️
+                        </button>
+                        <button
+                                type="button"
+                                class="btn-eliminar"
+                                (click)="eliminarVenta(venta)"
+                                title="Eliminar">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Formulario de ventas -->
+        <div *ngIf="mostrarFormularioVenta" class="formulario-overlay">
+            <div class="formulario-modal" [formGroup]="ventaForm">
+                <h3>{{ editandoVenta ? 'Editar' : 'Añadir nueva' }} venta</h3>
+
+                <div class="campo">
+                    <label for="plato">Plato:</label>
+                    <select id="plato" formControlName="platoId" class="select-plato">
+                        <option [ngValue]="null">Seleccionar plato</option>
+                        <option
+                                *ngFor="let plato of (editandoVenta ? platos : platosDisponibles)"
+                                [value]="plato.id">
+                            {{ plato.nombre }}
+                        </option>
+                    </select>
+                    <div *ngIf="ventaForm.get('platoId')?.invalid && ventaForm.get('platoId')?.touched" class="error-mensaje">
+                        Debe seleccionar un plato.
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label for="cantidad">Cantidad vendida:</label>
+                    <input
+                            type="number"
+                            id="cantidad"
+                            formControlName="cantidad"
+                            min="1"
+                            class="input-cantidad">
+                    <div *ngIf="ventaForm.get('cantidad')?.invalid && ventaForm.get('cantidad')?.touched" class="error-mensaje">
+                        La cantidad debe ser al menos 1.
+                    </div>
+                </div>
+
+                <div class="botones-formulario">
+                    <button type="button" class="btn-guardar" (click)="guardarVenta()">
+                        {{ editandoVenta ? 'Actualizar' : 'Guardar' }}
+                    </button>
+                    <button type="button" class="btn-cancelar" (click)="cerrarFormularioVenta()">
+                        Cancelar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- DIVISOR -->
+    <div class="divisor"></div>
+
+
+    <!-- SECCIÓN INFERIOR - REGISTRO DE COMPRAS -->
+    <div class="seccion-compras">
+        <div class="encabezado-seccion">
+            <h2>Registro de Compras</h2>
+            <div class="controles-mes">
+                <label for="mesCompras">Seleccionar mes:</label>
+                <select
+                        id="mesCompras"
+                        [(ngModel)]="mesSeleccionado"
+                        (change)="onMesChange()"
+                        class="select-mes">
+
+                    <option [value]="1">Enero</option>
+                    <option [value]="2">Febrero</option>
+                    <option [value]="3">Marzo</option>
+                    <option [value]="4">Abril</option>
+                    <option [value]="5">Mayo</option>
+                    <option [value]="6">Junio</option>
+                    <option [value]="7">Julio</option>
+                    <option [value]="8">Agosto</option>
+                    <option [value]="9">Septiembre</option>
+                    <option [value]="10">Octubre</option>
+                    <option [value]="11">Noviembre</option>
+                    <option [value]="12">Diciembre</option>
+                </select>
+
+                <select
+                        [(ngModel)]="anioSeleccionado"
+                        (change)="onAnioChange()"
+                        class="select-anio">
+
+                    <option [value]="2023">2023</option>
+                    <option [value]="2024">2024</option>
+                    <option [value]="2025">2025</option>
+                    <option [value]="2026">2026</option>
+                </select>
+
+                <button
+                        type="button"
+                        class="btn-agregar"
+                        (click)="abrirFormularioCompra()"
+                        [disabled]="cargandoCompras">
+                    + Añadir Compra
+                </button>
+            </div>
+        </div>
+
+
+        <div *ngIf="mensajeCompras" class="mensaje" [ngClass]="{'mensaje-error': mensajeCompras.includes('Error')}">
+            {{ mensajeCompras }}
+        </div>
+
+
+        <div class="lista-fechas" *ngIf="!cargandoCompras && comprasDelMes.length > 0">
+            <div *ngFor="let fecha of obtenerFechasUnicas()" class="fecha-grupo">
+                <div class="fecha-header" (click)="toggleFechaExpansion(fecha)">
+                    <span class="fecha-toggle">{{ esFechaExpandida(fecha) ? '▼' : '▶' }}</span>
+                    <span class="fecha-texto">{{ formatearFecha(fecha) }}</span>
+                    <span class="fecha-total">{{ formatearMoneda(calcularTotalFecha(fecha)) }}</span>
+                </div>
+
+                <div *ngIf="esFechaExpandida(fecha)" class="fecha-contenido">
+                    <div *ngFor="let compra of obtenerComprasPorFecha(fecha)" class="compra-item">
+                        <div class="compra-header">
+                            <button type="button" class="btn-editar-compra" (click)="editarCompra(compra)" title="Editar compra">Editar compra</button>
+                            <button type="button" class="btn-eliminar-compra" (click)="eliminarCompra(compra)" title="Eliminar compra">Eliminar compra</button>
+                        </div>
+                        <table class="tabla-insumos">
+
+                            <thead>
+                            <tr>
+                                <th>Insumo</th>
+                                <th>Cantidad</th>
+                                <th>Peso Total</th>
+                                <th>Costo total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let insumo of compra.insumos">
+                                <td>{{ insumo.nombre }}</td>
+                                <td>{{ mostrarCantidadCompra(insumo) }}</td>
+                                <td>
+                                        <span *ngIf="insumo.unidad !== 'kg'">
+                    {{ insumo.cantidad | number:'1.2-3' }} kg
+                </span>
+                                    <span *ngIf="insumo.unidad === 'kg'">-</span>
+                                </td>
+                                <td>{{ formatearMoneda(insumo.costoTotal) }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="total-mes">
+                <strong>Total gastado en {{ obtenerNombreMes(mesSeleccionado) }} {{ anioSeleccionado }}: {{ formatearMoneda(calcularTotalMes()) }}</strong>
+            </div>
+        </div>
+
+        <!-- Formulario de compras -->
+        <div *ngIf="mostrarFormularioCompra" class="formulario-overlay">
+            <div class="formulario-modal formulario-compra">
+                <h3>{{ editandoCompra ? 'Editar' : 'Añadir nueva' }} compra</h3>
+
+
+                <form [formGroup]="compraForm">
+
+                    <div class="campo">
+                        <label for="fechaCompra">Fecha de compra:</label>
+                        <input type="date" id="fechaCompra" formControlName="fecha" class="input-fecha">
+
+                        <div *ngIf="compraForm.get('fecha')?.hasError('required') && compraForm.get('fecha')?.touched" class="error-mensaje">
+                            La fecha es obligatoria.
+                        </div>
+
+                        <div *ngIf="compraForm.get('fecha')?.hasError('fechaDuplicada') && compraForm.get('fecha')?.touched" class="error-mensaje">
+                            Ya existe una compra para esta fecha. Por favor, edítela.
+                        </div>
+
+                    </div>
+
+                    <div class="insumos-section">
+                        <h4>Insumos:</h4>
+
+
+                        <div formArrayName="insumos">
+
+                            <div *ngFor="let insumoControl of insumosFormArray.controls; let i = index" [formGroupName]="i" class="insumo-item">
+
+                                <div class="insumo-header">
+                                    <span>Insumo {{ i + 1 }}</span>
+                                    <button
+                                            type="button"
+                                            class="btn-eliminar-insumo"
+                                            (click)="eliminarInsumo(i)"
+                                            *ngIf="insumosFormArray.length > 1"
+                                            title="Eliminar insumo">
+                                        ❌
+                                    </button>
+                                </div>
+
+                                <div class="campos-insumo">
+
+                                    <div class="campo autocomplete-container">
+                                        <label>Nombre del insumo:</label>
+
+                                        <input
+                                                type="text"
+                                                formControlName="nombre"
+                                                required
+                                                class="input-texto"
+                                                placeholder="Escribe o selecciona un insumo"
+                                                (input)="onInsumoNameChange($event, i)"
+                                                (focus)="onInsumoFocus(i)"
+                                                (blur)="onInsumoBlur(i)"
+                                                autocomplete="off">
+
+                                        <div *ngIf="insumoControl.get('nombre')?.hasError('required') && insumoControl.get('nombre')?.touched" class="error-mensaje">
+                                            El nombre es requerido.
+                                        </div>
+
+                                        <div
+                                                *ngIf="insumoControl.get('nombre')?.hasError('insumoNoEnLista') && insumoControl.get('nombre')?.touched"
+                                                class="error-mensaje">
+                                            Por favor, selecciona un insumo válido de la lista.
+                                        </div>
+
+                                        <ul class="suggestions-list" *ngIf="activeInsumoIndex === i && filteredInsumos.length > 0">
+                                            <li
+                                                    *ngFor="let insumo of filteredInsumos"
+                                                    class="suggestion-item"
+                                                    (mousedown)="selectInsumo(insumo, i)">
+                                                {{ insumo }}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="campo">
+                                        <label>Cantidad:</label>
+                                        <input
+                                                type="number"
+                                                formControlName="cantidad"
+                                                min="0"
+                                                step="any"
+                                                required
+                                                class="input-numero"
+                                                placeholder="0">
+
+                                        <div *ngIf="insumoControl.get('cantidad')?.invalid && insumoControl.get('cantidad')?.touched" class="error-mensaje">
+                                            La cantidad es requerida y debe ser mayor a 0.
+                                        </div>
+
+                                    </div>
+
+                                    <div class="campo">
+                                        <label>Unidad:</label>
+                                        <select
+                                                formControlName="unidad"
+                                                required
+                                                class="select-unidad"
+                                                (change)="onUnidadChangeCompra(i)">
+                                            <option *ngFor="let unidadItem of unidades" [value]="unidadItem">
+                                                {{ unidadItem }}
+                                            </option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="campo" *ngIf="insumoControl.get('unidad')?.value === 'unid'">
+                                        <label>Peso Aprox. (g):</label>
+                                        <input
+                                                type="number"
+                                                formControlName="pesoAprox"
+                                                min="1"
+                                                required
+                                                class="input-numero"
+                                                placeholder="Ej: 150">
+
+                                        <div *ngIf="insumoControl.get('pesoAprox')?.invalid && insumoControl.get('pesoAprox')?.touched" class="error-mensaje">
+                                            El peso es requerido para unidades.
+                                        </div>
+                                    </div>
+
+                                    <div class="campo">
+                                        <label>Costo total:</label>
+                                        <input
+                                                type="number"
+                                                formControlName="costoTotal"
+                                                min="0"
+                                                step="0.01"
+                                                required
+                                                class="input-numero"
+                                                placeholder="0.00">
+
+                                        <div *ngIf="insumoControl.get('costoTotal')?.invalid && insumoControl.get('costoTotal')?.touched" class="error-mensaje">
+                                            El costo es requerido y debe ser mayor a 0.
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div *ngIf="insumosFormArray.hasError('minLengthArray') && insumosFormArray.touched" class="error-mensaje mt-2">
+                            Debe agregar al menos un insumo.
+                        </div>
+
+
+                        <button
+                                type="button"
+                                class="btn-agregar-insumo"
+                                (click)="agregarInsumo()">
+                            + Añadir otro insumo
+                        </button>
+                    </div>
+
+                    <div class="botones-formulario">
+
+                        <button type="button" class="btn-guardar" (click)="guardarCompra()">
+                            {{ editandoCompra ? 'Actualizar' : 'Guardar' }}
+                        </button>
+                        <button type="button" class="btn-cancelar" (click)="cerrarFormularioCompra()">
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

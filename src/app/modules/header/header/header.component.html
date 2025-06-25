@@ -1,0 +1,53 @@
+<header class="header">
+    <div class="header-container">
+        <!-- Logo siempre visible -->
+        <div class="logo">
+            <img src="https://i.imgur.com/Z1Blc5O.png" alt="Logo" class="logo-img">
+            <span class="logo-text">ZeroWaste</span>
+        </div>
+
+        <!-- Barra de navegación (solo visible cuando el usuario está logueado) -->
+        <nav class="navigation" *ngIf="showNavigation">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a
+                            routerLink="/platos"
+                            class="nav-link"
+                            [class.active]="isActiveRoute('/platos')"
+                    >
+                        <i class="icon-platos"></i>
+                        Gestión de Platos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            routerLink="/registro"
+                            class="nav-link"
+                            [class.active]="isActiveRoute('/registro')"
+                    >
+                        <i class="icon-registro"></i>
+                        Registro de Operaciones
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            routerLink="/demanda"
+                            class="nav-link"
+                            [class.active]="isActiveRoute('/demanda')"
+                    >
+                        <i class="icon-demanda"></i>
+                        Predicción de Demanda
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Botón de cerrar sesión (solo visible cuando el usuario está logueado) -->
+        <div class="user-actions" *ngIf="showNavigation">
+            <button class="logout-btn" (click)="logout()">
+                <i class="icon-logout"></i>
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+</header>

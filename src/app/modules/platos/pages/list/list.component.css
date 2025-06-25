@@ -1,0 +1,485 @@
+
+.platos-container {
+    padding: 2rem;
+}
+
+/* Mensaje de notificación */
+.mensaje {
+    max-width: 1200px;
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.mensaje.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.mensaje.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.content-header h1 {
+    color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #1E88E5;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #1565C0;
+}
+
+.btn-primary:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background-color: #EEEEEE;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #ddd;
+}
+
+.btn-danger {
+    background-color: #f49188;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #d32f2f;
+}
+
+.btn-danger:disabled {
+    background-color: #ffcdd2;
+    cursor: not-allowed;
+}
+
+.btn-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 12px;
+}
+
+.add-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.plus-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Table Styles */
+.table-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.47);
+    overflow: hidden;
+}
+
+.platos-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+
+.platos-table thead {
+    background-color: #f5f5f5;
+}
+
+.platos-table th,
+.platos-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.platos-table th {
+    font-weight: bold;
+    color: #333;
+}
+
+.platos-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.no-platos {
+    padding: 3rem;
+    text-align: center;
+    color: #666;
+    background-color: white;
+}
+
+
+.platos-table td.acciones-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.platos-table thead th:last-child {
+    text-align: center;
+}
+
+
+.platos-table .btn-secondary {
+    background-color: #a0c3f1;
+    color: #121213;
+    border: 1px solid #dee2e6;
+    font-weight: 500;
+}
+
+.platos-table .btn-secondary:hover {
+    background-color: #e2e6ea;
+    border-color: #ced4da;
+}
+
+/* Estilo para el botón de Eliminar */
+.platos-table .btn-danger {
+    background-color: #fa3e2d;
+    color: #fdfdfd;
+    border: 1px solid #f7d1d1;
+    font-weight: 500;
+}
+
+.platos-table .btn-danger:hover {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Form Styles */
+.form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.form-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 2rem;
+}
+
+.form-card h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 2rem 0;
+    text-align: center;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 1rem;
+}
+
+.form-section h3 {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: rgba(30, 136, 229, 0.63);
+}
+
+.form-input.error {
+    border-color: #f44336;
+}
+
+.price-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 0.75rem;
+    color: #666;
+    font-weight: 500;
+    z-index: 1;
+}
+
+.price-input {
+    padding-left: 2.5rem;
+}
+
+.currency-symbol-small {
+    font-size: 12px;
+    color: #666;
+    margin-right: 0.25rem;
+}
+
+.price-input-small {
+    width: auto;
+    min-width: 80px;
+}
+
+.error-message {
+    color: #f44336;
+    font-size: 12px;
+    margin-top: 0.25rem;
+}
+
+/* Insumos Table */
+.insumos-table-container {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.insumos-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+    margin-top: 1rem;
+}
+
+.insumos-table thead {
+    background-color: #f5f5f5;
+}
+
+
+
+.insumos-table th,
+.insumos-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.insumos-table th {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.table-input {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid rgba(5, 5, 5, 0.63);
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.table-input:focus {
+    outline: none;
+    border-color: #1E88E5;
+}
+
+.add-insumo-btn {
+    border: 1px dashed #bdc3c7;
+    background-color: #1E88E5;
+    color: #fafafa;
+}
+.add-insumo-btn:hover {
+    background-color: #f4f7f9;
+    color: #2c3e50;
+    border-color: #34495e;
+}
+
+
+.insumos-table .btn-danger {
+    background-color: #34495e;
+    color: #e74c3c;
+    border: 1px solid #eef2f5;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    padding: 0;
+}
+.insumos-table .btn-danger:hover:not(:disabled) {
+    background-color: #e74c3c;
+    color: white;
+}
+.insumos-table .btn-danger:disabled {
+    background-color: #ecf0f1;
+    color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 2rem;
+    margin-top: 1rem;
+    border-top: 1px solid #eef2f5;
+}
+.form-actions .btn-primary {
+    background-color: #27ae60;
+    color: white;
+}
+.form-actions .btn-primary:hover:not(:disabled) {
+    background-color: #229954;
+}
+.form-actions .btn-primary:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+.form-actions .btn-secondary {
+    background-color: #dbfbff;
+    color: #000000;
+    border: 1px solid #e0e0e0;
+}
+.form-actions .btn-secondary:hover {
+    background-color: #e0e0e0;
+    color: #2c3e50;
+}
+
+/*  ESTILOS DE ERROR  */
+.form-input.error, .table-input.error {
+    border-color: #e74c3c !important;
+}
+.form-input.error:focus, .table-input.error:focus {
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15) !important;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .insumos-table, .insumos-table tbody, .insumos-table tr, .insumos-table td {
+        display: block;
+        width: 100%;
+    }
+    .insumos-table thead {
+        display: none;
+    }
+    .insumos-table tr {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        border: 1px solid #eef2f5;
+        background-color: #f9fafb;
+    }
+    .insumos-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border: none;
+        border-bottom: 1px solid #eef2f5;
+    }
+    .insumos-table td:last-child {
+        border-bottom: none;
+    }
+    .insumos-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #34495e;
+        margin-right: 1rem;
+    }
+    .insumos-table td:last-child::before {
+        content: "";
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .platos-table th,
+    .platos-table td {
+        padding: 0.5rem;
+        font-size: 13px;
+    }
+
+    .form-card {
+        padding: 1rem;
+    }
+
+    .insumos-table th,
+    .insumos-table td {
+        padding: 0.5rem;
+        font-size: 12px;
+    }
+
+    .table-input {
+        padding: 0.4rem;
+        font-size: 12px;
+    }
+}

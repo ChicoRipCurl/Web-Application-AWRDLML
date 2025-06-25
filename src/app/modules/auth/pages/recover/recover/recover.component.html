@@ -1,0 +1,185 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="plate">
+                        <div class="fork"></div>
+                        <div class="knife"></div>
+                    </div>
+                </div>
+                <span class="logo-text">Restaurant</span>
+            </div>
+        </div>
+
+        <!-- Initial Form (Email Input) -->
+        <div class="form-section" *ngIf="!emailSent">
+            <div class="form-header">
+                <div class="recover-icon">
+                    <i class="icon-lock"></i>
+                </div>
+                <h2>Recuperar Contraseña</h2>
+                <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña</p>
+            </div>
+
+            <form [formGroup]="recoverForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input
+                            type="email"
+                            id="email"
+                    formControlName="email"
+                    class="form-input"
+                    placeholder="correo@ejemplo.com"
+                            [class.error]="email.invalid && (email.dirty || email.touched)"
+                    >
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-message">
+                    <i class="icon-alert-circle"></i>
+                    <span *ngIf="email.errors?.['required']">El correo electrónico es obligatorio.</span>
+                    <span *ngIf="email.errors?.['email']">Por favor, ingresa un formato de correo válido.</span>
+                </div>
+
+                <div class="error-message" *ngIf="errorMessage && recoverForm.valid">
+                    <i class="icon-alert-circle"></i>
+                    {{ errorMessage }}
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                        type="submit"
+                        class="submit-btn"
+                [disabled]="recoverForm.invalid || isLoading"
+                [class.loading]="isLoading"
+                >
+                    <span *ngIf="!isLoading">Enviar enlace de recuperación</span>
+                    <div *ngIf="isLoading" class="loading-spinner">
+                        <div class="spinner"></div>
+                        <span>Enviando...</span>
+                    </div>
+                </button>
+            </form>
+        </div>
+
+        <!-- Success State (Email Sent) -->
+        <div class="form-section" *ngIf="emailSent">
+            <div class="form-header">
+                <div class="success-icon">
+                    <i class="icon-mail-sent"></i>
+                </div>
+                <h2>Enlace Enviado</h2>
+                <p>Te hemos enviado un enlace de recuperación</p>
+            </div>
+
+            <div class="success-content">
+                <!-- Success Message -->
+                <div class="success-message">
+                    <i class="icon-check-circle"></i>
+                    {{ successMessage }}
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <h4>¿Qué hacer ahora?</h4>
+                    <ol class="instruction-list">
+                        <li>Revisa tu bandeja de entrada</li>
+                        <li>Si no encuentras el correo, revisa tu carpeta de spam</li>
+                        <li>Haz clic en el enlace del correo para restablecer tu contraseña</li>
+                        <li>El enlace expira en 24 horas</li>
+                    </ol>
+                </div>
+
+                <!-- Resend Section -->
+                <div class="resend-section">
+                    <p>¿No recibiste el correo?</p>
+                    <button
+                            type="button"
+                            class="resend-btn"
+                            [disabled]="resendTimer > 0 || isLoading"
+                            (click)="resendEmail()"
+                            [class.loading]="isLoading"
+                    >
+                        <span *ngIf="!isLoading && resendTimer <= 0">Reenviar enlace</span>
+                        <span *ngIf="resendTimer > 0">Reenviar en {{ resendTimer }}s</span>
+                        <div *ngIf="isLoading" class="loading-spinner">
+                            <div class="spinner-small"></div>
+                            <span>Reenviando...</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button
+                            type="button"
+                            class="secondary-btn"
+                            (click)="resetForm()"
+                    >
+                        Intentar con otro correo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="form-footer">
+            <div class="footer-links">
+                <button
+                        type="button"
+                        class="link-btn"
+                        (click)="goToLogin()"
+                >
+                    <i class="icon-arrow-left"></i>
+                    Volver al inicio de sesión
+                </button>
+
+                <button
+                        type="button"
+                        class="link-btn"
+                        (click)="goToRegister()"
+                >
+                    ¿No tienes cuenta? Regístrate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-cards">
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="icon-shield"></i>
+            </div>
+            <h3>Seguro</h3>
+            <p>Tus datos están protegidos con encriptación de grado bancario</p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="icon-clock"></i>
+            </div>
+            <h3>Rápido</h3>
+            <p>El proceso de recuperación toma menos de 2 minutos</p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="icon-support"></i>
+            </div>
+            <h3>Soporte</h3>
+            <p>¿Necesitas ayuda? Contáctanos en cualquier momento</p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-icon">
+                <i class="icon-key"></i>
+            </div>
+            <h3>Control</h3>
+            <p>Solo tú puedes acceder y restablecer tu contraseña</p>
+        </div>
+    </div>
+</div>

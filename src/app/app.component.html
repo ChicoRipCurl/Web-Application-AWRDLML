@@ -1,0 +1,7 @@
+<app-header></app-header>
+<main [ngClass]="{
+  'main-content': layout === 'default',
+  'fullscreen-content': layout === 'fullscreen'
+}">
+    <router-outlet></router-outlet>
+</main>

@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+main {
+
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    padding: 1.5rem;
+    background-color: #f8fafc;
+}
+
+.fullscreen-content {
+    padding: 0;
+}
