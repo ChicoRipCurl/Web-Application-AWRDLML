@@ -1,3 +1,3 @@
 export const config = {
-    apiUrl: 'https://backend-r519.onrender.com/api'
+    apiUrl: 'https://app-zerowaste-backend-hpcbfcgwc9ceahfm.chilecentral-01.azurewebsites.net/api'
 };
