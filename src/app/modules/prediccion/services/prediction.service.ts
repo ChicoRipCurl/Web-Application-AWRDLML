@@ -6,9 +6,9 @@ import { map, switchMap } from 'rxjs/operators';
 import { PlatosService } from '../../platos/services/platos.service';
 import {VentasService} from "../../registro/services/ventas.service";
 import {ComprasService} from "../../registro/services/compras.service";
-import { Venta } from '../../registro/entities/venta.interface';
-import { Compra } from '../../registro/entities/compra.interface';
-import { CompraInsumo } from '../../registro/entities/insumoCompra.interface';
+
+import {config} from "../../../config/config";
+
 
 // Interfaces para los resultados de la predicción (lo que devolvería el backend de ML)
 export interface PrediccionPlato {
@@ -64,8 +64,7 @@ export interface WasteAnalysisData {
 })
 export class PredictionService {
 
-  // En un caso real, esta URL debe apuntar a nuestro backend de Machine Learning
-  private predictionApiUrl = 'http://localhost:5000/predict'; // EJEMPLO de URL del backend de ML
+    private apiUrl = `${config.apiUrl}/prediccion`;
 
   constructor(
       private http: HttpClient,
@@ -199,49 +198,18 @@ export class PredictionService {
         );
     }
 
+    getPrediction(startDate: string, endDate: string): Observable<PredictionResult> {
 
-// Recolecta todos los datos y los envía al backend de predicción.ESTA FUNCIÓN SIMULA LA LLAMADA AL BACKEND DE ML.
-  getPrediction(startDate: string, endDate: string): Observable<PredictionResult> {
-    // 1. Recolectar todos los datos necesarios para el modelo
-    return forkJoin({
-      platos: this.platosService.getPlatos(),
-      ventas: this.ventasService.getVentas(),
-      compras: this.comprasService.getAllCompras()
-    }).pipe(
-        switchMap(historicalData => {
-          const payload = {
-            startDate,
-            endDate,
-            historicalData
-          };
+        // 1. Creamos el payload que espera el backend de Spring Boot
+        const payload = {
+            fechaInicio: startDate,
+            fechaFin: endDate
+        };
 
-          // En un caso real, se hace llamada POST al backend de ML
-          // return this.http.post<PredictionResult>(this.predictionApiUrl, payload);
+        // 2. Llamamos al backend, no al de ML directamente.
+        return this.http.post<PredictionResult>(this.apiUrl, payload);
 
-          // --- SIMULACIÓN DE LA RESPUESTA DEL BACKEND ---
-          // Por mientras devolvemos datos de ejemplo con `of()`. para avanzar el UY
-
-
-          console.log("Enviando al backend de ML (simulado):", payload);
-
-          const mockResult: PredictionResult = {
-            platosEstimados: [
-              { nombre: 'Lomo saltado', cantidadEstimada: 60 },
-              { nombre: 'Ají de gallina', cantidadEstimada: 40 },
-              { nombre: 'Ceviche', cantidadEstimada: 53 }
-            ],
-            insumosRequeridos: [
-              { nombre: 'Pollo', prediccionOptimaKg: 18, compraSinSistemaKg: 25 },
-              { nombre: 'Tomate', prediccionOptimaKg: 11, compraSinSistemaKg: 15 },
-              { nombre: 'Arroz', prediccionOptimaKg: 29, compraSinSistemaKg: 30 },
-              { nombre: 'Papa amarilla', prediccionOptimaKg: 35, compraSinSistemaKg: 40 }
-            ]
-          };
-
-          return of(mockResult);
-        })
-    );
-  }
+    }
 
     getWasteAnalysisData(startMonth: string, endMonth: string): Observable<WasteAnalysisData> {
         return forkJoin({
