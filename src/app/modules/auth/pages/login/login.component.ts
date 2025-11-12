@@ -47,11 +47,11 @@ export class LoginComponent {
       },
       error: (error) => {
         console.error('Error en login:', error);
-        if (error.status === 401 || error.status === 403) {
-          this.errorMessage = 'Credenciales incorrectas. Intenta nuevamente.';
-        } else {
-          this.errorMessage = 'Error al conectar con el servidor. Intenta nuevamente más tarde.';
-        }
+          if (error.status === 401 || error.status === 403) {
+              this.errorMessage = error.error?.message || 'Credenciales incorrectas. Intenta nuevamente.';
+          } else {
+              this.errorMessage = 'Error al conectar con el servidor. Intenta nuevamente más tarde.';
+          }
         this.isLoading = false;
       }
     });

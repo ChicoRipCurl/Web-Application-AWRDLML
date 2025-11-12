@@ -251,6 +251,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   guardar(): void {
+      this.platoForm.markAllAsTouched();
     if (this.platoForm.valid && this.insumosFormArray.length > 0) {
       const formValue = this.platoForm.value;
       const excludeId = this.modoEdicion ? this.platoEditando?.id : undefined;
@@ -315,7 +316,7 @@ export class ListComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      this.mostrarMensajeError('Por favor, complete todos los campos requeridos y añada al menos un insumo.');
+        this.mostrarMensajeError('Por favor, complete todos los campos requeridos y añada al menos un insumo.');
     }
   }
 
