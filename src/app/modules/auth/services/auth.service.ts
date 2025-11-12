@@ -110,7 +110,6 @@ export class AuthService {
     // Helper para manejar errores de HTTP
     private handleError(error: any): Observable<never> {
         console.error('Ocurrió un error en la petición:', error);
-        const errorMessage = error.error?.message || error.message || 'Error desconocido del servidor.';
-        return throwError(() => new Error(errorMessage));
+        return throwError(() => error);
     }
 }
